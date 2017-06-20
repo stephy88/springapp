@@ -8,7 +8,9 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
@@ -19,11 +21,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.web.dao.ProductDao;
+import com.web.dao.impl.ProductDaoImpl;
+
 @Configuration
 @ComponentScan("com.web.*")
+//@ComponentScan(basePackages = { "com.web.*" }, excludeFilters = { @Filter(type = FilterType.ANNOTATION, value = Configuration.class) })
 @EnableTransactionManagement
 // Load to Environment.
-@PropertySource("hibernate-cfg.properties")
+@PropertySource("classpath:hibernate-cfg.properties")
 
 public class ApplicationContextConfig {
 	
@@ -38,14 +44,6 @@ public class ApplicationContextConfig {
 		
 		return rb;
 	}
-	
-	@Bean(name = "viewResolver")
-    public InternalResourceViewResolver getViewResolver() {
-        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setPrefix("/WEB-INF/pages/");
-        viewResolver.setSuffix(".jsp");
-        return viewResolver;
-    }
 	
 	@Bean(name = "multipartResolver")
     public CommonsMultipartResolver multipartResolver() {
@@ -92,7 +90,7 @@ public class ApplicationContextConfig {
         factoryBean.afterPropertiesSet();
         //
         SessionFactory sf = factoryBean.getObject();
-        System.out.println("## getSessionFactory: " + sf);
+        System.out.println("getSessionFactory: " + sf);
         return sf;
     }
 	
@@ -102,5 +100,11 @@ public class ApplicationContextConfig {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager(sessionFactory);
  
         return transactionManager;
+    }
+	
+	@Bean(name = "productDAO")
+    public ProductDao getProductDAO() {
+		System.out.println("product dao successfully registered");
+        return new ProductDaoImpl();
     }
 }

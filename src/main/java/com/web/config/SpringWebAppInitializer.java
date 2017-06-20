@@ -23,9 +23,9 @@ public class SpringWebAppInitializer implements WebApplicationInitializer {
         dispatcher.addMapping("/");
          
          
-        ContextLoaderListener contextLoaderListener = new ContextLoaderListener(appContext);
+        /*ContextLoaderListener contextLoaderListener = new ContextLoaderListener(appContext);
  
-        servletContext.addListener(contextLoaderListener);
+        servletContext.addListener(contextLoaderListener);*/
          
          
         // Filter.
@@ -36,5 +36,7 @@ public class SpringWebAppInitializer implements WebApplicationInitializer {
         fr.addMappingForUrlPatterns(null, true, "/*");
 		
 	}
-
+	 
+    
+ 
 }
